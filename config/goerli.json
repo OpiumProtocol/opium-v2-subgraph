@@ -1,0 +1,17 @@
+{
+  "network": "goerli",
+  "onChainPositionsLens": "",
+  "oracleAggregatorProxyAddress": "",
+  "oracleAggregatorImplementationAddress": "",
+  "oracleAggregatorProxyStartBlock": 0,
+  "coreProxyAddress": "0xe0b043cbb8Bd7881a768Ed1196F3a6b244a8A456",
+  "coreImplementationAddress": "0xe3D359854fcDdfb088C7C62a1aE2Ae6e26f21E88",
+  "coreProxyStartBlock": 6270014,
+  "opiumProxyFactoryProxyAddress": "0xD0fA94cC4eD55e4A6B6f4bda9D18322F65e97fe2",
+  "opiumProxyFactoryImplementationAddress": "0x8EcC08Db686212157a8C4e512319c80723c430c8",
+  "opiumProxyFactoryProxyStartBlock": 6270020,
+  "syntheticAggregatorAddress": "0xE24c14F01A60C9A78A559b565824D1Ee682dEc10",
+  "syntheticAggregatorStartBlock": 6270024,
+  "tokenSpenderAddress": "0xcAF309032104D52f0d114Da140c625F83689E983",
+  "tokenSpenderStartBlock": 6270016
+}

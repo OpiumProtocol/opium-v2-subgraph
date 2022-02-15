@@ -1,0 +1,5 @@
+node_modules
+subgraph.yaml
+data
+build
+generated

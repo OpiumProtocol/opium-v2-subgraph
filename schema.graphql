@@ -1,0 +1,63 @@
+# entity representing a synthetic position
+type Position @entity {
+  # position's address
+  id: ID!
+  # erc20-related data
+  name: String!
+  symbol: String!
+  # ticker-related data
+  derivativeHash: Bytes!
+}
+
+type Holder @entity {
+  # account's address
+  id: ID!
+  longBalance: [PositionBalance!]! @derivedFrom(field: "holder")
+  shortBalance: [PositionBalance!]! @derivedFrom(field: "holder")
+  # on-chain action-related metadata
+  createdAt: BigInt!
+  createdTx: Bytes!
+}
+
+type Ticker @entity {
+  # derivative hash
+  id: ID!
+  # LibDerivative.Derivative-related data
+  margin: BigInt!
+  endTime: BigInt!
+  params: [BigInt!]!
+  oracleId: Bytes!
+  token: Bytes!
+  syntheticId: Bytes!
+  # positions-data
+  longPositionAddress: Bytes!
+  shortPositionAddress: Bytes!
+  # on-chain action-related metadata
+  createdAt: BigInt!
+  createdTx: Bytes!
+}
+
+type PositionBalance @entity {
+  # position's address + holder's address `${holder.id} + ${position.id}`
+  id: ID!
+  holder: Holder!
+  balance: BigInt!
+  derivativeHash: Bytes!
+}
+
+type OracleId @entity {
+  # oracleId's account address
+  id: ID!
+  oracleData: [OracleData!] @derivedFrom(field: "oracleId")
+}
+
+type OracleData @entity {
+  # oracleId's account address + timestamp
+  id: ID!
+  oracleId: OracleId!
+  timestamp: BigInt!
+  data: BigInt!
+  # on-chain action-related metadata
+  createdAt: BigInt!
+  createdTx: Bytes!
+}

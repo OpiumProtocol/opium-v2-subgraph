@@ -1,0 +1,91 @@
+specVersion: 0.0.2
+description: Opium-v2-subgraph
+repository: https://github.com/RiccardoBiosas/opium-v2-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Core
+    network: {{network}}
+    source:
+      address: '{{coreProxyAddress}}'
+      abi: Core
+      startBlock: {{coreProxyStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - LogCancelled
+        - LogCreated
+        - LogExecuted
+        - LogMinted
+        - LogRedeemed
+      abis:
+        - name: Core
+          file: ./abis/Core.json
+      eventHandlers:
+        - event: LogCreated(indexed address,indexed address,indexed bytes32,uint256)
+          handler: handleLogCreated
+      file: ./src/coreMapping.ts
+  - kind: ethereum
+    name: OpiumProxyFactory
+    network: {{network}}
+    source:
+      address: '{{opiumProxyFactoryProxyAddress}}'
+      abi: OpiumProxyFactory
+      startBlock: {{opiumProxyFactoryProxyStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - LogPositionTokenPair
+      abis:
+        - name: OpiumPositionToken
+          file: ./abis/OpiumPositionToken.json
+        - name: OpiumProxyFactory
+          file: ./abis/OpiumProxyFactory.json
+      eventHandlers:
+        - event: LogPositionTokenPair(indexed bytes32,indexed address,indexed address)
+          handler: handleLogPositionTokenPair
+      file: ./src/opiumPositionTokenMapping.ts
+  - kind: ethereum
+    name: OracleAggregator
+    network: {{network}}
+    source:
+      address: '{{oracleAggregatorProxyAddress}}'
+      abi: OracleAggregator
+      startBlock: {{oracleAggregatorProxyStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - LogDataProvided
+      abis:
+        - name: OracleAggregator
+          file: ./abis/OracleAggregator.json
+      eventHandlers:
+        - event: LogDataProvided(indexed address,indexed uint256,indexed uint256)
+          handler: handleLogDataProvided
+      file: ./src/oracleMapping.ts
+templates:
+  - kind: ethereum/contract
+    name: OpiumPositionToken
+    network: {{network}}
+    source:
+      abi: OpiumPositionToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/opiumPositionTokenMapping.ts
+      entities:
+        - OpiumPositionToken
+      abis:
+        - name: OpiumPositionToken
+          file: ./abis/OpiumPositionToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer

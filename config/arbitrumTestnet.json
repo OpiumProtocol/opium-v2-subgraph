@@ -1,0 +1,19 @@
+{
+  "network": "arbitrum-rinkeby",
+  "onChainPositionsLens": "0x4b214B8AaFBdeB170b550Bb2dfed41AadD9aCf74",
+  "oracleAggregatorProxyAddress": "0xd030051cd8Cc0760fb0Fa857bbFDb8f9C3dAcaDE",
+  "oracleAggregatorImplementationAddress": "0x5F1670bdbAfcbEA39579083Dfd56984bb4A34d25",
+  "oracleAggregatorProxyStartBlock": 9228018,
+  "coreProxyAddress": "0x416d29de99e346c59100680a14d44De08891dE30",
+  "coreImplementationAddress": "0x8d4129b538EEdaD7169ff53dd710E152eab9eB4B",
+  "coreProxyStartBlock": 9228005,
+  "opiumProxyFactoryProxyAddress": "0x3ea7753bE2d0ab682cd0f0B8803f3331BC5230fc",
+  "opiumProxyFactoryImplementationAddress": "0x30654f4145A67345CF1B701eac259aA7a2e06FE7",
+  "opiumProxyFactoryProxyStartBlock": 9228014,
+  "syntheticAggregatorProxyAddress": "0x3c1150e52d028DCD67a0bA986D332D54A8baC29A",
+  "syntheticAggregatorImplementationAddress": "0xF69821f7364FFc154E4a5003794EE2D9F40FD8Cc",
+  "syntheticAggregatorStartBlock": 0,
+  "tokenSpenderProxyAddress": "0xdFDe0C087DF52627673043a86E657B927ee10c4b",
+  "tokenSpenderImplementationAddress": "0xa370CF1BB01e368FFdDB81A6511E6Ef072131A77",
+  "tokenSpenderStartBlock": 0
+}
