@@ -1,24 +1,6 @@
-# entity representing a synthetic position
-type Position @entity {
-  # position's address
-  id: ID!
-  # erc20-related data
-  name: String!
-  symbol: String!
-  # ticker-related data
-  derivativeHash: Bytes!
-}
+### Tickers and Positions
 
-type Holder @entity {
-  # account's address
-  id: ID!
-  longBalance: [PositionBalance!]! @derivedFrom(field: "holder")
-  shortBalance: [PositionBalance!]! @derivedFrom(field: "holder")
-  # on-chain action-related metadata
-  createdAt: BigInt!
-  createdTx: Bytes!
-}
-
+# Ticker entity represents unique derivative params
 type Ticker @entity {
   # derivative hash
   id: ID!
@@ -30,21 +12,49 @@ type Ticker @entity {
   token: Bytes!
   syntheticId: Bytes!
   # positions-data
-  longPositionAddress: Bytes!
-  shortPositionAddress: Bytes!
+  longPosition: Position!
+  shortPosition: Position!
   # on-chain action-related metadata
   createdAt: BigInt!
   createdTx: Bytes!
 }
 
-type PositionBalance @entity {
-  # position's address + holder's address `${holder.id} + ${position.id}`
+# Position entity represents specific LONG / SHORT position params and data of the derivative
+type Position @entity {
+  # position's address
   id: ID!
-  holder: Holder!
-  balance: BigInt!
-  derivativeHash: Bytes!
+  # erc20-related data
+  name: String!
+  symbol: String!
+  totalSupply: BigInt!
+  # ticker-related data
+  isLong: Boolean!
+  ticker: Ticker!
 }
 
+# Holder entity represents Positions holders
+type Holder @entity {
+  # account's address
+  id: ID!
+  # positions-related data
+  positions: [HolderPosition!]! @derivedFrom(field: "holder")
+  # on-chain action-related metadata
+  createdAt: BigInt!
+  createdTx: Bytes!
+}
+
+# HolderPosition entity connects Holders to Positions through Ticker
+type HolderPosition @entity {
+  # Holder id + Ticker id
+  # `${holder.id}:${ticker.id}`
+  id: ID!
+  holder: Holder!
+  ticker: Ticker!
+  longBalance: BigInt!
+  shortBalance: BigInt!
+}
+
+### Oracles
 type OracleId @entity {
   # oracleId's account address
   id: ID!

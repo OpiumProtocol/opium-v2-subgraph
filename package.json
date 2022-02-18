@@ -2,15 +2,18 @@
   "name": "opium-v2-subgraph",
   "license": "UNLICENSED",
   "scripts": {
-    "prepare:arbitrumTestnet": "cat ./config/${NETWORK:-arbitrumTestnet}.json | mustache  - subgraph.template.yaml > subgraph.yaml",
-    "prepare:ganache": "cat ./config/${NETWORK:-ganache}.json | mustache  - subgraph.template.yaml > subgraph.yaml",
-    "prepare:goerli": "cat ./config/${NETWORK:-goerli}.json | mustache  - subgraph.template.yaml > subgraph.yaml",
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "NETWORK=arbitrum-rinkeby graph deploy --node https://api.thegraph.com/deploy/ RiccardoBiosas/opium-v2-subgraph",
-    "create-local": "graph create --node http://localhost:8020/ RiccardoBiosas/opium-v2-subgraph",
-    "remove-local": "graph remove --node http://localhost:8020/ RiccardoBiosas/opium-v2-subgraph",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 RiccardoBiosas/opium-v2-subgraph"
+    "prepare": "cat ./config/${NETWORK:-arbitrumTestnet}.json | mustache  - subgraph.template.yaml > subgraph.yaml && yarn codegen && yarn build",
+    "prepare:arbitrumOne": "NETWORK=arbitrumOne yarn prepare",
+    "prepare:arbitrumTestnet": "NETWORK=arbitrumTestnet yarn prepare",
+    "prepare:ganache": "NETWORK=ganache yarn prepare",
+    "prepare:goerli": "NETWORK=goerli yarn prepare",
+    "deploy:arbitrumOne": "yarn prepare:arbitrumOne && graph deploy --node https://api.thegraph.com/deploy/ opiumprotocol/opium-v2-arbitrum-one",
+    "deploy:arbitrumTestnet": "yarn prepare:arbitrumTestnet && graph deploy --node https://api.thegraph.com/deploy/ opiumprotocol/opium-v2-arbitrum-rinkeby",
+    "create-local": "graph create --node http://localhost:8020/ OpiumProtocol/opium-v2-subgraph",
+    "remove-local": "graph remove --node http://localhost:8020/ OpiumProtocol/opium-v2-subgraph",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 OpiumProtocol/opium-v2-subgraph"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.25.3",

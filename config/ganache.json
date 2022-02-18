@@ -1,19 +1,7 @@
 {
   "network": "mainnet",
-  "onChainPositionsLens": "",
-  "oracleAggregatorProxyAddress": "",
-  "oracleAggregatorImplementationAddress": "",
-  "oracleAggregatorProxyStartBlock": 0,
-  "coreProxyAddress": "0x25B8FeEE3B1192420E833633CE6edda69fDBaaB3",
-  "coreImplementationAddress": "0xD433fe2b883EDB7950741f787286fD40800c5290",
-  "coreProxyStartBlock": 0,
   "opiumProxyFactoryProxyAddress": "0x6f3FaCF2Fa6488A5B0D808eC45E4Cb45F2991066",
-  "opiumProxyFactoryImplementationAddress": "0x2A6c19bc474D1Ff754D7048673432dd5024F88a4",
   "opiumProxyFactoryProxyStartBlock": 0,
-  "syntheticAggregatorProxyAddress": "0x99C8a7fa632AAc88134858a5Cee64Fc9Cc0f7599",
-  "syntheticAggregatorImplementationAddress": "0xF4C5DEbE0FdB7BBa3cfbe34055A42AB14aDf9484",
-  "syntheticAggregatorStartBlock": 0,
-  "tokenSpenderProxyAddress": "0x01C216d1165f80E1745a20c125751b08CeEE76cC",
-  "tokenSpenderImplementationAddress": "0xCec4C23bB0199269e18df6CA8a93e6888682cCC7",
-  "tokenSpenderStartBlock": 0
+  "oracleAggregatorProxyAddress": "",
+  "oracleAggregatorProxyStartBlock": 0
 }

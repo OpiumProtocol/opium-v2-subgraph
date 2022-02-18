@@ -1,112 +1,130 @@
-import {
-  Transfer,
-  OpiumPositionToken,
-} from "../generated/OpiumProxyFactory/OpiumPositionToken";
+import { Transfer } from "../generated/OpiumProxyFactory/OpiumPositionToken";
 import { LogPositionTokenPair } from "../generated/OpiumProxyFactory/OpiumProxyFactory";
 import { OpiumPositionToken as OpiumPositionTokenTemplate } from "../generated/templates";
 import {
-  isZeroAddress,
   loadOrCreateHolderEntity,
-  loadOrCreatePositionBalanceEntity,
+  loadOrCreateHolderPositionEntity,
   loadOrCreatePositionEntity,
   loadOrCreateTickerEntity,
-} from "../utils/index";
+} from "../utils/tickersAndPositions";
+import { isZeroAddress } from "../utils";
 
 export function handleLogPositionTokenPair(event: LogPositionTokenPair): void {
-  let tickerEntity = loadOrCreateTickerEntity(
+  // Register new Ticker
+  loadOrCreateTickerEntity(
     event.params._derivativeHash,
     event.params._longPositionAddress,
     event.params._shortPositionAddress,
     event.block.timestamp,
     event.transaction.hash
   );
-  
-  let longPositionEntity = loadOrCreatePositionEntity(
-    event.params._longPositionAddress
-  );
-  let shortPositionEntity = loadOrCreatePositionEntity(
-    event.params._shortPositionAddress
-  );
+  // Register new LONG position
+  loadOrCreatePositionEntity(event.params._longPositionAddress);
+  // Register new SHORT position
+  loadOrCreatePositionEntity(event.params._shortPositionAddress);
 
-  longPositionEntity.save();
-  shortPositionEntity.save();
-  tickerEntity.save();
-
-  // initializes the OpiumPositionToken templates
+  // Initialize the OpiumPositionToken templates
   OpiumPositionTokenTemplate.create(event.params._longPositionAddress);
   OpiumPositionTokenTemplate.create(event.params._shortPositionAddress);
 }
 
 export function handleTransfer(event: Transfer): void {
-  // mint event => Transfer(address(0), account, amount);
-  const derivativeData = OpiumPositionToken.bind(
-    event.address
-  ).getPositionTokenData();
+  const positionEntity = loadOrCreatePositionEntity(event.address);
+
+  // Mint action => Transfer(address(0), account, amount);
   if (isZeroAddress(event.params.from) && !isZeroAddress(event.params.to)) {
-    let holderEntity = loadOrCreateHolderEntity(
+    // Register To Holder
+    loadOrCreateHolderEntity(
       event.params.to,
       event.block.timestamp,
       event.transaction.hash
     );
-    let positionEntity = loadOrCreatePositionBalanceEntity(
+    let holderPositionEntity = loadOrCreateHolderPositionEntity(
       event.params.to,
-      event.address,
-      derivativeData.derivativeHash
+      positionEntity.ticker
     );
 
-    positionEntity.balance = positionEntity.balance.plus(event.params.value);
+    // Update Holder balance
+    if (positionEntity.isLong) {
+      holderPositionEntity.longBalance = holderPositionEntity.longBalance.plus(event.params.value);
+    } else {
+      holderPositionEntity.shortBalance = holderPositionEntity.shortBalance.plus(event.params.value);
+    }
+    holderPositionEntity.save();
+
+    // Update totalSupply
+    positionEntity.totalSupply = positionEntity.totalSupply.plus(event.params.value);
     positionEntity.save();
-    holderEntity.save();
+
+    return
   }
-  // burn event => Transfer(account, address(0), amount);
+
+  // Burn action => Transfer(account, address(0), amount);
   if (!isZeroAddress(event.params.from) && isZeroAddress(event.params.to)) {
-    let holderEntity = loadOrCreateHolderEntity(
+    // Register From Holder
+    loadOrCreateHolderEntity(
       event.params.from,
       event.block.timestamp,
       event.transaction.hash
     );
-    let positionEntity = loadOrCreatePositionBalanceEntity(
+    let holderPositionEntity = loadOrCreateHolderPositionEntity(
       event.params.from,
-      event.address,
-      derivativeData.derivativeHash
+      positionEntity.ticker
     );
 
-    positionEntity.balance = positionEntity.balance.minus(event.params.value);
+    // Update Holder balance
+    if (positionEntity.isLong) {
+      holderPositionEntity.longBalance = holderPositionEntity.longBalance.minus(event.params.value);
+    } else {
+      holderPositionEntity.shortBalance = holderPositionEntity.shortBalance.minus(event.params.value);
+    }
+    holderPositionEntity.save();
+
+    // Update totalSupply
+    positionEntity.totalSupply = positionEntity.totalSupply.minus(event.params.value);
     positionEntity.save();
-    holderEntity.save();
-  }
-  // transfer action => Transfer(account, account, amount);
-  if (!isZeroAddress(event.params.from) && !isZeroAddress(event.params.to)) {
-    let buyerEntity = loadOrCreateHolderEntity(
-      event.params.from,
-      event.block.timestamp,
-      event.transaction.hash
-    );
-    let sellerEntity = loadOrCreateHolderEntity(
-      event.params.to,
-      event.block.timestamp,
-      event.transaction.hash
-    );
-    let positionEntityBuyer = loadOrCreatePositionBalanceEntity(
-      event.params.from,
-      event.address,
-      derivativeData.derivativeHash
-    );
-    let positionEntitySeller = loadOrCreatePositionBalanceEntity(
-      event.params.to,
-      event.address,
-      derivativeData.derivativeHash
-    );
 
-    positionEntityBuyer.balance = positionEntityBuyer.balance.plus(
-      event.params.value
-    );
-    positionEntitySeller.balance = positionEntitySeller.balance.minus(
-      event.params.value
-    );
-    positionEntityBuyer.save();
-    positionEntitySeller.save();
-    buyerEntity.save();
-    sellerEntity.save();
+    return
   }
+
+  // Transfer action => Transfer(account, account, amount);
+  // Register From Holder
+  loadOrCreateHolderEntity(
+    event.params.from,
+    event.block.timestamp,
+    event.transaction.hash
+  );
+  // Register To Holder
+  loadOrCreateHolderEntity(
+    event.params.to,
+    event.block.timestamp,
+    event.transaction.hash
+  );
+  let fromPositionEntity = loadOrCreateHolderPositionEntity(
+    event.params.from,
+    positionEntity.ticker
+  );
+  let toPositionEntity = loadOrCreateHolderPositionEntity(
+    event.params.to,
+    positionEntity.ticker
+  );
+
+  // Update Holders balances
+  if (positionEntity.isLong) {
+    fromPositionEntity.longBalance = fromPositionEntity.longBalance.minus(
+      event.params.value
+    );
+    toPositionEntity.longBalance = toPositionEntity.longBalance.plus(
+      event.params.value
+    );
+  } else {
+    fromPositionEntity.shortBalance = fromPositionEntity.shortBalance.minus(
+      event.params.value
+    );
+    toPositionEntity.shortBalance = toPositionEntity.shortBalance.plus(
+      event.params.value
+    );
+  }
+  fromPositionEntity.save();
+  toPositionEntity.save();
 }
