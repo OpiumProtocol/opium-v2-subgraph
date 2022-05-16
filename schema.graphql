@@ -30,6 +30,7 @@ type Position @entity {
   # ticker-related data
   isLong: Boolean!
   ticker: Ticker!
+  endTime: BigInt!
 }
 
 # Holder entity represents Positions holders

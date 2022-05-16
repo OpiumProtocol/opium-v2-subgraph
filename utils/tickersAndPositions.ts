@@ -62,6 +62,7 @@ export const loadOrCreatePositionEntity = (
     positionEntity.totalSupply = BigInt.fromI32(0);
     positionEntity.isLong = positionTokenData.positionType === 1; // SHORT = 0, LONG = 1
     positionEntity.ticker = positionTokenData.derivativeHash.toHex();
+    positionEntity.endTime = positionTokenData.derivative.endTime;
 
     positionEntity.save();
   }
