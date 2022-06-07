@@ -1,0 +1,7 @@
+{
+  "network": "mainnet",
+  "opiumProxyFactoryProxyAddress": "0x6E797659154AD0D6f199feaFA2E2086Ce0239Fbf",
+  "opiumProxyFactoryProxyStartBlock": 14782376,
+  "oracleAggregatorProxyAddress": "0xC135bE47acCEf605E72C5017e450aE0207C97Afb",
+  "oracleAggregatorProxyStartBlock": 14782442
+}
