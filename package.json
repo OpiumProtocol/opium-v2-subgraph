@@ -10,9 +10,11 @@
     "prepare:arbitrumTestnet": "NETWORK=arbitrumTestnet yarn prepare",
     "prepare:ganache": "NETWORK=ganache yarn prepare",
     "prepare:goerli": "NETWORK=goerli yarn prepare",
+    "prepare:polygon": "NETWORK=polygon yarn prepare",
     "deploy:mainnet": "yarn prepare:mainnet && graph deploy --node https://api.thegraph.com/deploy/ opiumprotocol/opium-v2-mainnet",
     "deploy:arbitrumOne": "yarn prepare:arbitrumOne && graph deploy --node https://api.thegraph.com/deploy/ opiumprotocol/opium-v2-arbitrum-one",
     "deploy:arbitrumTestnet": "yarn prepare:arbitrumTestnet && graph deploy --node https://api.thegraph.com/deploy/ opiumprotocol/opium-v2-arbitrum-rinkeby",
+    "deploy:polygon": "yarn prepare:polygon && graph deploy --node https://api.thegraph.com/deploy/ opiumprotocol/opium-v2-polygon",
     "create-local": "graph create --node http://localhost:8020/ OpiumProtocol/opium-v2-subgraph",
     "remove-local": "graph remove --node http://localhost:8020/ OpiumProtocol/opium-v2-subgraph",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 OpiumProtocol/opium-v2-subgraph"

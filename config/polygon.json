@@ -1,0 +1,7 @@
+{
+  "network": "matic",
+  "opiumProxyFactoryProxyAddress": "0x328bC74ccA6578349B262D21563d5581DAA43a16",
+  "opiumProxyFactoryProxyStartBlock": 36588584,
+  "oracleAggregatorProxyAddress": "0x85d9c3784B277Bc10e1504Aa8f647132ba17A674",
+  "oracleAggregatorProxyStartBlock": 36588596
+}
